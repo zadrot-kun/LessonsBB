@@ -5,11 +5,17 @@ class Rubric(models.Model):
     """Модель рубрики"""
     name = models.CharField(max_length=100,
                             verbose_name="Название",
-                            unique=True)
+                            unique=True,
+                            null=True)
     parent = models.ForeignKey('self',
                                on_delete=models.SET_NULL,
                                verbose_name="Родительская рубрика",
-                               null=True)
+                               null=True,
+                               default=None)
+
+    class Meta:
+        verbose_name = 'Рубрика'
+        verbose_name_plural = 'Рубрики'
 
 
 class Bulletin(models.Model):
@@ -24,3 +30,7 @@ class Bulletin(models.Model):
     rubric = models.ForeignKey(Rubric,
                                on_delete=models.PROTECT,
                                verbose_name="Рубрика")
+
+    class Meta:
+        verbose_name = 'Объявление'
+        verbose_name_plural = 'Объявления'
