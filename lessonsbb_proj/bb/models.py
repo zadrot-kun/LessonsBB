@@ -5,13 +5,19 @@ class Rubric(models.Model):
     """Модель рубрики"""
     name = models.CharField(max_length=100,
                             verbose_name="Название",
-                            unique=True,
-                            null=True)
+                            unique=True)
     parent = models.ForeignKey('self',
                                on_delete=models.SET_NULL,
                                verbose_name="Родительская рубрика",
                                null=True,
-                               default=None)
+                               default=None,
+                               blank=True)
+
+    def __str__(self):
+        return f"{self.name}({self.pk})"
+
+    def get_absolute_url(self):
+        return "/bb/create_rubric/"
 
     class Meta:
         verbose_name = 'Рубрика'
