@@ -4,12 +4,25 @@ from bb.models import Bulletin as BulletinModel, Rubric as RubricModel
 from bb.forms import BBForm, RubricForm
 from django.http import JsonResponse
 from django.template.response import TemplateResponse
+from django.urls import reverse
 
 
 class CreateRubricController(CreateView):
     model = RubricModel
     form_class = RubricForm
-    template_name = "bb/new_rubric.html"
+    template_name = "bb/new_record.html"
+
+    def get_success_url(self):
+        return reverse('index')
+
+
+class CreateBBController(CreateView):
+    model = BulletinModel
+    form_class = BBForm
+    template_name = "bb/new_record.html"
+
+    def get_success_url(self):
+        return reverse('index')
 
 
 def rubric_list(request):
@@ -18,4 +31,9 @@ def rubric_list(request):
 
 
 def index(request):
-    return TemplateResponse(request, 'bb/index.html', context={"rubrics": RubricModel.objects.all()})
+    rubrics = RubricModel.objects.all()
+    bbs = BulletinModel.objects.all()
+    return TemplateResponse(request,
+                            'bb/index.html',
+                            context={"rubrics": rubrics,
+                                     "bbs": bbs})

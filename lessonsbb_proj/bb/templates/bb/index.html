@@ -5,9 +5,24 @@
     <title>Title</title>
 </head>
 <body>
-{% for rubric in rubrics %}
--- {{ rubric.name }}
-<hr>
-{% endfor %}
+<table>
+    <tr>
+        <td>
+        {% for rubric in rubrics %}
+        -- {{ rubric.name }}
+        <hr>
+        {% endfor %}
+        </td>
+        <td>
+            {% for bb in bbs %}
+                {{ bb.name }} <br>
+                {{ bb.description }} <br>
+                {{ bb.cost }} {{ bb.curr }} <br>
+                {{ bb.rubric }}
+                <hr>
+            {% endfor %}
+        </td>
+    </tr>
+</table>
 </body>
 </html>

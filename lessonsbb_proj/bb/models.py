@@ -16,8 +16,8 @@ class Rubric(models.Model):
     def __str__(self):
         return f"{self.name}({self.pk})"
 
-    def get_absolute_url(self):
-        return "/bb/create_rubric/"
+    # def get_absolute_url(self):
+    #     return "/bb/create_rubric/"
 
     class Meta:
         verbose_name = 'Рубрика'

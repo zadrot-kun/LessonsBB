@@ -5,5 +5,5 @@ from bb.views import index
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('bb/', include('bb.bb_urls')),
-    path('', index),
+    path('', index, name="index"),
 ]
