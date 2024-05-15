@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'bb/root.html' %}
+
+{% block body_content %}
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Добавить">
 </form>
-</body>
-</html>
+{% endblock body_content %}

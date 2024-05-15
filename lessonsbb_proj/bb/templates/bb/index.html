@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'bb/root.html' %}
+
+{% block body_content %}
 <table>
     <tr>
         <td>
         {% for rubric in rubrics %}
-        -- {{ rubric.name }}
+            -- <a href="{% url 'bb_by_rubric' rubric.pk %}">{{ rubric.name }}</a>
         <hr>
         {% endfor %}
         </td>
@@ -24,5 +20,4 @@
         </td>
     </tr>
 </table>
-</body>
-</html>
+{% endblock body_content %}

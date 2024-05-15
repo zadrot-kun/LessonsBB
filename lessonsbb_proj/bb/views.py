@@ -37,3 +37,12 @@ def index(request):
                             'bb/index.html',
                             context={"rubrics": rubrics,
                                      "bbs": bbs})
+
+
+def index_by_rubric(request, rubric):
+    rubrics = RubricModel.objects.all()
+    bbs = BulletinModel.objects.filter(rubric=rubric)
+    return TemplateResponse(request,
+                            'bb/index.html',
+                            context={"rubrics": rubrics,
+                                     "bbs": bbs})
