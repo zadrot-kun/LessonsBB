@@ -13,6 +13,9 @@ class Rubric(models.Model):
                                default=None,
                                blank=True)
 
+    def name_length(self):
+        return len(self.name)
+
     def __str__(self):
         return f"{self.name}({self.pk})"
 
@@ -22,6 +25,7 @@ class Rubric(models.Model):
     class Meta:
         verbose_name = 'Рубрика'
         verbose_name_plural = 'Рубрики'
+        ordering = ['-name']
 
 
 class Bulletin(models.Model):
@@ -40,3 +44,5 @@ class Bulletin(models.Model):
     class Meta:
         verbose_name = 'Объявление'
         verbose_name_plural = 'Объявления'
+        ordering = ['-rubric', '-cost']
+        unique_together = ('name', 'description', 'cost')
