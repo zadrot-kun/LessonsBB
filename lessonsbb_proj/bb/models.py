@@ -46,3 +46,7 @@ class Bulletin(models.Model):
         verbose_name_plural = 'Объявления'
         ordering = ['-rubric', '-cost']
         unique_together = ('name', 'description', 'cost')
+        permissions = (
+            ('alcohol', 'Права на покупку алкоголя'),
+        )
+        default_permissions = ('add', 'view', 'change', 'delete', 'alcohol')
