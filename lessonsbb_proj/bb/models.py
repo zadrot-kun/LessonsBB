@@ -40,6 +40,12 @@ class Bulletin(models.Model):
     rubric = models.ForeignKey(Rubric,
                                on_delete=models.PROTECT,
                                verbose_name="Рубрика")
+    create_timestamp = models.DateTimeField(auto_now_add=True,
+                                            verbose_name="Метка даты/времени создания записи",
+                                            blank=True)
+    update_timestamp = models.DateTimeField(auto_now=True,
+                                            verbose_name="Метка даты/времени изменения записи",
+                                            blank=True)
 
     class Meta:
         verbose_name = 'Объявление'
