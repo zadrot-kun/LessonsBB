@@ -46,6 +46,9 @@ class Bulletin(models.Model):
     update_timestamp = models.DateTimeField(auto_now=True,
                                             verbose_name="Метка даты/времени изменения записи",
                                             blank=True)
+    picture = models.ImageField(verbose_name="Изображение",
+                                upload_to="img",
+                                blank=True)
 
     class Meta:
         verbose_name = 'Объявление'

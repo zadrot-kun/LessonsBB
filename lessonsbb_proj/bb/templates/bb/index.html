@@ -12,6 +12,9 @@
         <td>
             {% for bb in bbs %}
                 {{ bb.name }} <br>
+                {% if bb.picture %}
+                    <img src="{{ bb.picture.url }}" />
+                {% endif %}
                 {{ bb.description }} <br>
                 {{ bb.cost }} {{ bb.curr }} <br>
                 {{ bb.rubric }}
