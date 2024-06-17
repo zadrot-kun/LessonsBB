@@ -13,7 +13,7 @@
             {% for bb in bbs %}
                 {{ bb.name }} <br>
                 {% if bb.picture %}
-                    <img src="{{ bb.picture.url }}" />
+                    <img src="{{ bb.picture.url }}" width="150px" height="150px"/>
                 {% endif %}
                 {{ bb.description }} <br>
                 {{ bb.cost }} {{ bb.curr }} <br>

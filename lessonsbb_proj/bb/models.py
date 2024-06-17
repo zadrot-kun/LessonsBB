@@ -1,4 +1,9 @@
 from django.db import models
+from django.core import validators
+
+min_10_chars_vlid = validators.MinLengthValidator(
+    10,
+    message='Значение не может быть меньше 10 символов')
 
 
 class Rubric(models.Model):
@@ -31,9 +36,11 @@ class Rubric(models.Model):
 class Bulletin(models.Model):
     """Модель объявления"""
     name = models.CharField(max_length=100,
-                            verbose_name="Название")
+                            verbose_name="Название",
+                            validators=[min_10_chars_vlid])
     description = models.TextField(verbose_name="Описание",
-                                   help_text="Текст неограниченной длинны")
+                                   help_text="Текст неограниченной длинны",
+                                   validators=[min_10_chars_vlid])
     cost = models.DecimalField(decimal_places=2, max_digits=11)
     curr = models.CharField(max_length=3,
                             verbose_name="Валюта")
