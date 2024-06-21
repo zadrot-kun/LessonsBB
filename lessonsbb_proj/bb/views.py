@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django.http import HttpResponseNotFound
 
 
 class CreateRubricController(CreateView):
@@ -43,6 +44,34 @@ def create_bb(request):
                                     template_name,
                                     context={'form': bb_form})
 
+
+def update_bb(request, bb_pk):
+    template_name = "bb/new_record.html"
+    try:
+        bb = BulletinModel.objects.get(pk=bb_pk)
+    except BulletinModel.DoesNotExist:
+        return HttpResponseNotFound('Не найдено данное объявление')
+    if request.method == 'GET':
+        bb_form = BBForm(instance=bb)
+        return TemplateResponse(request,
+                                template_name,
+                                context={'form': bb_form})
+    elif request.method == 'POST':
+        bb_form = BBForm(request.POST, request.FILES, instance=bb)
+        if bb_form.is_valid():
+            # bb_form.save()
+            bb.name = request.POST['name']
+            bb.description = bb_form.cleaned_data['description']
+            bb.cost = bb_form.cleaned_data['cost']
+            bb.curr = bb_form.cleaned_data['curr']
+            bb.rubric = bb_form.cleaned_data['rubric']
+            bb.picture = bb_form.cleaned_data['picture']
+            bb.save()
+            return HttpResponseRedirect("/")
+        else:
+            return TemplateResponse(request,
+                                    template_name,
+                                    context={'form': bb_form})
 
 class CreateBBController(CreateView):
     model = BulletinModel

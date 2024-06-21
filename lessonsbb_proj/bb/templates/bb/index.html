@@ -11,7 +11,7 @@
         </td>
         <td>
             {% for bb in bbs %}
-                {{ bb.name }} <br>
+                <a href="{% url 'update_bb' bb.pk %}">{{ bb.name }}</a> <br>
                 {% if bb.picture %}
                     <img src="{{ bb.picture.url }}" width="150px" height="150px"/>
                 {% endif %}
