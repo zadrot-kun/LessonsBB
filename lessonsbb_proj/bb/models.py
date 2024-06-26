@@ -46,7 +46,8 @@ class Bulletin(models.Model):
                             verbose_name="Валюта")
     rubric = models.ForeignKey(Rubric,
                                on_delete=models.PROTECT,
-                               verbose_name="Рубрика")
+                               verbose_name="Рубрика",
+                               related_query_name='bbs')
     create_timestamp = models.DateTimeField(auto_now_add=True,
                                             verbose_name="Метка даты/времени создания записи",
                                             blank=True)
