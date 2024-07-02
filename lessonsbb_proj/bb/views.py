@@ -7,6 +7,7 @@ from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.http import HttpResponseNotFound
+from django.db import models
 
 
 class CreateRubricController(CreateView):
@@ -89,6 +90,10 @@ def rubric_list(request):
 
 def index(request):
     rubrics = RubricModel.objects.all()
+    # -- выборка по подзапросу
+    # nedv_rubrcs = RubricModel.objects.filter(models.Q(name='Недвижимость') | models.Q(parent__name='Недвижимость'))
+    # subq_nedv_rubrcs = models.Subquery(nedv_rubrcs.values("pk"))
+    # bbs = BulletinModel.objects.all().filter(rubric__in=subq_nedv_rubrcs)
     bbs = BulletinModel.objects.all()
     return TemplateResponse(request,
                             'bb/index.html',
