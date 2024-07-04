@@ -10,6 +10,12 @@
         {% endfor %}
         </td>
         <td>
+            <select>
+            {% for sort_key, sorted_value in sorting_dict.items %}
+                <option sort_key="{{ sort_key }}">{{ sorted_value }}</option>
+            {% endfor %}
+            </select>
+            <hr>
             {% for bb in bbs %}
                 <a href="{% url 'update_bb' bb.pk %}">{{ bb.name }}</a> <br>
                 {% if bb.picture %}

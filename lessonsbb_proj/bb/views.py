@@ -10,6 +10,16 @@ from django.http import HttpResponseNotFound
 from django.db import models
 
 
+SORTING_DICT = {
+    'name': "Название",
+    'description': "Описание",
+    'cost': "Стоимость",
+    'rubric': "Рубрика",
+    'create_timestamp': "Дата создания",
+    'update_timestamp': "Дата обновления",
+}
+
+
 class CreateRubricController(CreateView):
     model = RubricModel
     form_class = RubricForm
@@ -95,10 +105,22 @@ def index(request):
     # subq_nedv_rubrcs = models.Subquery(nedv_rubrcs.values("pk"))
     # bbs = BulletinModel.objects.all().filter(rubric__in=subq_nedv_rubrcs)
     bbs = BulletinModel.objects.all()
+    filter_dict = {}
+    for filter_key in (x for x in request.GET if x.startswith('filter_')):
+        if filter_key.endswith('__in'):
+            filter_dict[filter_key[7:]] = request.GET[filter_key].split(',')
+        else:
+            filter_dict[filter_key[7:]] = request.GET[filter_key]
+    if filter_dict:
+        print(filter_dict)
+        bbs = bbs.filter(**filter_dict)
+    if 'order' in request.GET:
+        bbs = bbs.order_by(request.GET['order'])
     return TemplateResponse(request,
                             'bb/index.html',
                             context={"rubrics": rubrics,
-                                     "bbs": bbs})
+                                     "bbs": bbs,
+                                     "sorting_dict": SORTING_DICT})
 
 
 def index_by_rubric(request, rubric):
