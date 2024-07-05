@@ -114,13 +114,16 @@ def index(request):
     if filter_dict:
         print(filter_dict)
         bbs = bbs.filter(**filter_dict)
+    selected_order = ''
     if 'order' in request.GET:
         bbs = bbs.order_by(request.GET['order'])
+        selected_order = request.GET['order']
     return TemplateResponse(request,
                             'bb/index.html',
                             context={"rubrics": rubrics,
                                      "bbs": bbs,
-                                     "sorting_dict": SORTING_DICT})
+                                     "sorting_dict": SORTING_DICT,
+                                     'selected_order': selected_order})
 
 
 def index_by_rubric(request, rubric):

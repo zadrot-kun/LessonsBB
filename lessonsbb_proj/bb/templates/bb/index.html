@@ -4,15 +4,18 @@
 <table>
     <tr>
         <td>
-        {% for rubric in rubrics %}
-            -- <a href="{% url 'bb_by_rubric' rubric.pk %}">{{ rubric.name }}</a>
+            <select size="10" id="filter_rubric_list">
+                {% for rubric in rubrics %}
+                <option value="{{ rubric.pk }}">{{ rubric.name }}</option>
+                {% endfor %}
+            </select>
         <hr>
-        {% endfor %}
+
         </td>
         <td>
-            <select>
+            <select id="select_order">
             {% for sort_key, sorted_value in sorting_dict.items %}
-                <option sort_key="{{ sort_key }}">{{ sorted_value }}</option>
+                <option value="{{ sort_key }}"{% if sort_key == selected_order %} selected{% endif %}>{{ sorted_value }}</option>
             {% endfor %}
             </select>
             <hr>
@@ -29,4 +32,18 @@
         </td>
     </tr>
 </table>
+<script>
+    function update_params() {
+        var myObject = {};
+        if ($('#select_order option:checked').length > 0) {
+            myObject['order'] = $('#select_order option:checked').val()
+        }
+        if ($('#filter_rubric_list option:checked').length > 0) {
+            myObject['filter_rubric'] = $('#filter_rubric_list option:checked').val()
+        }
+        window.location.href = location.protocol + '//' + location.host + location.pathname + '?' + decodeURIComponent( $.param( myObject ) );
+    }
+    $("#select_order").on("change", update_params );
+    $("#filter_rubric_list").on("change", update_params );
+</script>
 {% endblock body_content %}
