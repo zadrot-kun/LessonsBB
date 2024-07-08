@@ -93,13 +93,16 @@ class CreateBBController(CreateView):
         return reverse('index')
 
 
-def rubric_list(request):
-    all_rubrics = [{'id': x.pk, 'name': x.name, 'parent': str(x.parent)} for x in RubricModel.objects.all()]
-    return JsonResponse(all_rubrics, safe=False)
+def test_json_controller(request):
+    all_data = [x.pk for x in BulletinModel.objects.order_by("rubric").distinct('rubric')]
+    return JsonResponse(all_data, safe=False)
 
 
 def index(request):
     rubrics = RubricModel.objects.all()
+    rubrics_flag = {}
+    for rubric in rubrics:
+        rubrics_flag[rubric.pk] = BulletinModel.objects.filter(rubric=rubric.pk).count()
     # -- выборка по подзапросу
     # nedv_rubrcs = RubricModel.objects.filter(models.Q(name='Недвижимость') | models.Q(parent__name='Недвижимость'))
     # subq_nedv_rubrcs = models.Subquery(nedv_rubrcs.values("pk"))
@@ -118,12 +121,17 @@ def index(request):
     if 'order' in request.GET:
         bbs = bbs.order_by(request.GET['order'])
         selected_order = request.GET['order']
+    selected_rubric = ''
+    if 'filter_rubric' in request.GET:
+        selected_rubric = int(request.GET['filter_rubric'])
     return TemplateResponse(request,
                             'bb/index.html',
                             context={"rubrics": rubrics,
                                      "bbs": bbs,
                                      "sorting_dict": SORTING_DICT,
-                                     'selected_order': selected_order})
+                                     'selected_order': selected_order,
+                                     'selected_rubric': selected_rubric,
+                                     'rubrics_flag': rubrics_flag})
 
 
 def index_by_rubric(request, rubric):

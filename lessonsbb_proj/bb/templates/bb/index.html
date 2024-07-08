@@ -6,7 +6,7 @@
         <td>
             <select size="10" id="filter_rubric_list">
                 {% for rubric in rubrics %}
-                <option value="{{ rubric.pk }}">{{ rubric.name }}</option>
+                <option value="{{ rubric.pk }}"{% if rubric.pk == selected_rubric %} selected{% endif %}>{{ rubric.name }}({% for key, value in rubrics_flag.items %}{% if rubric.pk == key %}{{ value }}{% endif %}{% endfor %})</option>
                 {% endfor %}
             </select>
         <hr>
