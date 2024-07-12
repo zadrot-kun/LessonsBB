@@ -99,10 +99,14 @@ def test_json_controller(request):
 
 
 def index(request):
-    rubrics = RubricModel.objects.all()
-    rubrics_flag = {}
-    for rubric in rubrics:
-        rubrics_flag[rubric.pk] = BulletinModel.objects.filter(rubric=rubric.pk).count()
+    rubrics = RubricModel.objects.annotate(count_bb=models.Count('bbs__pk'))
+    # rubrics = RubricModel.objects.annotate(count_bb=models.functions.Concat(models.Value('Название рубрики: '), models.F('name')))
+    # rubrics = RubricModel.objects.annotate(count_bb=models.functions.Substr('name', 2, 2))
+    # rubrics = RubricModel.objects.annotate(count_bb=models.functions.Length('name'))
+    # rubrics = RubricModel.objects.annotate(count_bb=models.functions.Replace('name', models.Value('о'), models.Value('!')))
+    # rubrics_flag = {}
+    # for rubric in rubrics:
+    #     rubrics_flag[rubric.pk] = BulletinModel.objects.filter(rubric=rubric.pk).annotate(models.Count('pk'))['cost__avg']
     # -- выборка по подзапросу
     # nedv_rubrcs = RubricModel.objects.filter(models.Q(name='Недвижимость') | models.Q(parent__name='Недвижимость'))
     # subq_nedv_rubrcs = models.Subquery(nedv_rubrcs.values("pk"))
@@ -131,7 +135,9 @@ def index(request):
                                      "sorting_dict": SORTING_DICT,
                                      'selected_order': selected_order,
                                      'selected_rubric': selected_rubric,
-                                     'rubrics_flag': rubrics_flag})
+                                     # 'rubrics_flag': rubrics_flag
+                                     }
+                            )
 
 
 def index_by_rubric(request, rubric):

@@ -1,12 +1,12 @@
 {% extends 'bb/root.html' %}
-
+{% load static %}
 {% block body_content %}
 <table>
     <tr>
         <td>
             <select size="10" id="filter_rubric_list">
                 {% for rubric in rubrics %}
-                <option value="{{ rubric.pk }}"{% if rubric.pk == selected_rubric %} selected{% endif %}>{{ rubric.name }}({% for key, value in rubrics_flag.items %}{% if rubric.pk == key %}{{ value }}{% endif %}{% endfor %})</option>
+                <option value="{{ rubric.pk }}"{% if rubric.pk == selected_rubric %} selected{% endif %}>{{ rubric.name }}({{ rubric.count_bb }})</option>
                 {% endfor %}
             </select>
         <hr>
@@ -32,18 +32,5 @@
         </td>
     </tr>
 </table>
-<script>
-    function update_params() {
-        var myObject = {};
-        if ($('#select_order option:checked').length > 0) {
-            myObject['order'] = $('#select_order option:checked').val()
-        }
-        if ($('#filter_rubric_list option:checked').length > 0) {
-            myObject['filter_rubric'] = $('#filter_rubric_list option:checked').val()
-        }
-        window.location.href = location.protocol + '//' + location.host + location.pathname + '?' + decodeURIComponent( $.param( myObject ) );
-    }
-    $("#select_order").on("change", update_params );
-    $("#filter_rubric_list").on("change", update_params );
-</script>
+<script src="{% static 'bb/index.js' %}"></script>
 {% endblock body_content %}
