@@ -26,7 +26,9 @@
                 {% endif %}
                 {{ bb.description }} <br>
                 {{ bb.cost }} {{ bb.curr }} <br>
-                {{ bb.rubric }}
+                {{ bb.rubric }} <br>
+                {{ bb.update_timestamp }} <br>
+                ({{ bb.cfield }})
                 <hr>
             {% endfor %}
         </td>

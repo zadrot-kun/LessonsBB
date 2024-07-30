@@ -100,10 +100,12 @@ def test_json_controller(request):
 
 def index(request):
     rubrics = RubricModel.objects.annotate(count_bb=models.Count('bbs__pk'))
+    # rubrics = RubricModel.objects.annotate(count_bb=models.functions.Now())
+    # rubrics = RubricModel.objects.annotate(count_bb=models.Value('♥'))
     # rubrics = RubricModel.objects.annotate(count_bb=models.functions.Concat(models.Value('Название рубрики: '), models.F('name')))
     # rubrics = RubricModel.objects.annotate(count_bb=models.functions.Substr('name', 2, 2))
     # rubrics = RubricModel.objects.annotate(count_bb=models.functions.Length('name'))
-    # rubrics = RubricModel.objects.annotate(count_bb=models.functions.Replace('name', models.Value('о'), models.Value('!')))
+    # rubrics = RubricModel.objects.annotate(count_bb=models.funct  ions.Replace('name', models.Value('о'), models.Value('!')))
     # rubrics_flag = {}
     # for rubric in rubrics:
     #     rubrics_flag[rubric.pk] = BulletinModel.objects.filter(rubric=rubric.pk).annotate(models.Count('pk'))['cost__avg']
@@ -111,7 +113,9 @@ def index(request):
     # nedv_rubrcs = RubricModel.objects.filter(models.Q(name='Недвижимость') | models.Q(parent__name='Недвижимость'))
     # subq_nedv_rubrcs = models.Subquery(nedv_rubrcs.values("pk"))
     # bbs = BulletinModel.objects.all().filter(rubric__in=subq_nedv_rubrcs)
-    bbs = BulletinModel.objects.all()
+    # bbs = BulletinModel.objects.all().annotate(cfield=models.functions.Trunc('update_timestamp', 'week'))
+    # bbs = BulletinModel.objects.all().annotate(cfield=models.functions.TruncDate('update_timestamp'))
+    bbs = BulletinModel.objects.all().annotate(cfield=models.functions.TruncTime('update_timestamp'))
     filter_dict = {}
     for filter_key in (x for x in request.GET if x.startswith('filter_')):
         if filter_key.endswith('__in'):
