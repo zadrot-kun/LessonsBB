@@ -120,7 +120,14 @@ def index(request):
     # bbs = BulletinModel.objects.all().annotate(cfield=models.functions.TruncTime('update_timestamp'))
     bbs = BulletinModel.objects.all().annotate(cfield=models.functions.TruncTime('update_timestamp'))
     # bbs = BulletinModel.objects.all().annotate(cfield=models.functions.Sqrt('cost'))
-    bbs = BulletinModel.objects.all().annotate(cfield=models.functions.MD5('name'))
+    bbs = BulletinModel.objects.all().annotate(cfield=models.Case(
+            models.When(create_timestamp__gt=models.F('update_timestamp'), then=models.F('create_timestamp')),
+            models.When(update_timestamp__gt=models.F('create_timestamp'), then=models.F('update_timestamp')),
+            default=None
+        )
+    )
+    # for x in bbs.values_list('id', 'description', 'cost', 'curr'):
+    #     print(x)
     filter_dict = {}
     for filter_key in (x for x in request.GET if x.startswith('filter_')):
         if filter_key.endswith('__in'):
