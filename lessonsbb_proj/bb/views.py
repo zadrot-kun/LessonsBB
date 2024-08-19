@@ -78,7 +78,7 @@ def update_bb(request, bb_pk):
             bb.rubric = bb_form.cleaned_data['rubric']
             bb.picture = bb_form.cleaned_data['picture']
             bb.save()
-            return HttpResponseRedirect("/")
+            return HttpResponseRedirect(reverse('index'))
         else:
             return TemplateResponse(request,
                                     template_name,
