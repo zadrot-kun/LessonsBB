@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
 from bb.models import Bulletin as BulletinModel, Rubric as RubricModel
 from bb.forms import BBForm, RubricForm
@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.http import HttpResponseNotFound
 from django.db import models
+from django.views.decorators.http import require_GET, require_http_methods
 
 
 SORTING_DICT = {
@@ -49,13 +50,15 @@ def create_bb(request):
             new_bb.save()
             new_bb.description += '!'
             new_bb.save()
-            return HttpResponseRedirect("/")
+            return HttpResponseRedirect(reverse('index'))
         else:
             return TemplateResponse(request,
                                     template_name,
                                     context={'form': bb_form})
 
 
+# @require_GET
+@require_http_methods(['GET', 'POST'])
 def update_bb(request, bb_pk):
     template_name = "bb/new_record.html"
     try:
@@ -78,7 +81,8 @@ def update_bb(request, bb_pk):
             bb.rubric = bb_form.cleaned_data['rubric']
             bb.picture = bb_form.cleaned_data['picture']
             bb.save()
-            return HttpResponseRedirect(reverse('index'))
+            # return HttpResponseRedirect(reverse('index'))
+            return redirect(reverse('index'))
         else:
             return TemplateResponse(request,
                                     template_name,
