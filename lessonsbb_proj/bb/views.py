@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponseNotFound
 from django.db import models
 from django.views.decorators.http import require_GET, require_http_methods
+from django.views.generic.base import TemplateView
 
 
 SORTING_DICT = {
@@ -100,6 +101,37 @@ class CreateBBController(CreateView):
 def test_json_controller(request):
     all_data = [x.pk for x in BulletinModel.objects.order_by("rubric").distinct('rubric')]
     return JsonResponse(all_data, safe=False)
+
+
+class IndexClass(TemplateView):
+
+    template_name = 'bb/index.html'
+
+    def get_context_data(self, **kwargs):
+        context_dict = super().get_context_data(**kwargs)
+        context_dict['rubrics'] = RubricModel.objects.annotate(count_bb=models.Count('bbs__pk'))
+        bbs = BulletinModel.objects.all().annotate(cfield=models.functions.TruncTime('update_timestamp'))
+        filter_dict = {}
+        for filter_key in (x for x in self.request.GET if x.startswith('filter_')):
+            if filter_key.endswith('__in'):
+                filter_dict[filter_key[7:]] = self.request.GET[filter_key].split(',')
+            else:
+                filter_dict[filter_key[7:]] = self.request.GET[filter_key]
+        if filter_dict:
+            print(filter_dict)
+            bbs = bbs.filter(**filter_dict)
+        selected_order = ''
+        if 'order' in self.request.GET:
+            bbs = bbs.order_by(self.request.GET['order'])
+            selected_order = self.request.GET['order']
+        selected_rubric = ''
+        if 'filter_rubric' in self.request.GET:
+            selected_rubric = int(self.request.GET['filter_rubric'])
+        context_dict["bbs"] = bbs
+        context_dict["sorting_dict"] = SORTING_DICT
+        context_dict['selected_order'] = selected_order
+        context_dict['selected_rubric'] = selected_rubric
+        return context_dict
 
 
 def index(request):
