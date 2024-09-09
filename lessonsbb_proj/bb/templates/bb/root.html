@@ -4,8 +4,16 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="{% static 'bb/jquery-3.7.1.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'bb/main.css' %}"></link>
 </head>
 <body>
+<div id="up_div">
+    <div class="up_button">
+        <a href="{% url 'index' %}">
+            <img src="{% static 'bb/home_icon.png' %}">
+        </a>
+    </div>
+</div>
 {% block body_content %}
 {% endblock body_content %}
 </body>

@@ -1,0 +1,14 @@
+#up_div {
+    width: 100%;
+    height: 30px;
+    background-color: lightseagreen;
+    padding: 2px;
+}
+div.up_button {
+    width: 30px;
+    height: 30px;
+}
+div.up_button img {
+    width: 30px;
+    height: 30px;
+}
