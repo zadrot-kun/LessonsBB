@@ -1,6 +1,7 @@
 {% extends 'bb/root.html' %}
 {% load static %}
 {% block body_content %}
+{# "Главная страница" #}
 <table>
     <tr>
         <td>
@@ -27,7 +28,7 @@
                 {{ bb.description }} <br>
                 {{ bb.cost }} {{ bb.curr }} <br>
                 {{ bb.rubric }} <br>
-                {{ bb.update_timestamp }} <br>
+                {{ bb.update_timestamp|date:'d.m.Y H:i:s' }} <br>
                 ({{ bb.cfield }})
                 <hr>
             {% endfor %}
