@@ -58,6 +58,10 @@ class Bulletin(models.Model):
     picture = models.ImageField(verbose_name="Изображение",
                                 upload_to="img",
                                 blank=True)
+    active_flag = models.BooleanField(
+        verbose_name="Флаг активности объявления",
+        default=True,
+    )
 
     class Meta:
         verbose_name = 'Объявление'

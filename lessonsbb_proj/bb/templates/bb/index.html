@@ -21,14 +21,16 @@
             </select>
             <hr>
             {% for bb in bbs %}
-                <a href="{% url 'update_bb' bb.pk %}">{{ bb.name }}</a> <br>
+                <a href="{% url 'update_bb' bb.pk %}">{{ bb.name|upper }}</a> <br>
                 {% if bb.picture %}
                     <img src="{{ bb.picture.url }}" width="150px" height="150px"/>
                 {% endif %}
-                {{ bb.description }} <br>
-                {{ bb.cost }} {{ bb.curr }} <br>
+                {{ bb.description|truncatechars:100 }} <br>
+                {{ bb.cost|default:"бесплатно" }} {% if bb.cost > 0 %} {{ bb.curr }} {% endif %}  <br>
                 {{ bb.rubric }} <br>
                 {{ bb.update_timestamp|date:'d.m.Y H:i:s' }} <br>
+                Последнее обновление было {{ bb.update_timestamp|timesince }} назад <br>
+                {{ bb.active_flag|yesno:"Активно,Неактивно" }} <br>
                 ({{ bb.cfield }})
                 <hr>
             {% endfor %}
