@@ -63,6 +63,9 @@ class Bulletin(models.Model):
         default=True,
     )
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name = 'Объявление'
         verbose_name_plural = 'Объявления'
