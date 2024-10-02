@@ -20,6 +20,10 @@
             {% endfor %}
             </select>
             <hr>
+            {% regroup bbs by rubric as reg_bbs %}
+            {# {% for el_reg_bbs in reg_bbs %} #}
+            {#                <h3>{{ el_reg_bbs.grouper }}</h3> #}
+            {#            {% for bb in el_reg_bbs.list %} #}
             {% for bb in bbs %}
                 <a href="{% url 'update_bb' bb.pk %}">{{ bb.name|upper }}</a> <br>
                 {% if bb.picture %}
@@ -34,6 +38,7 @@
                 ({{ bb.cfield }})
                 <hr>
             {% endfor %}
+            {# {% endfor %} #}
         </td>
     </tr>
 </table>

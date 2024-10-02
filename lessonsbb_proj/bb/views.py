@@ -99,7 +99,7 @@ class CreateBBController(CreateView):
 
 
 def test_json_controller(request):
-    all_data = [x.pk for x in BulletinModel.objects.order_by("rubric").distinct('rubric')]
+    all_data = [x.pk for x in BulletinModel.objects.order_by("rubric")]
     return JsonResponse(all_data, safe=False)
 
 
