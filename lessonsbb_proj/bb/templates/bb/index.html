@@ -1,7 +1,13 @@
 {% extends 'bb/root.html' %}
 {% load static %}
 {% block body_content %}
-{# "Главная страница" #}
+    {# "Главная страница" #}
+{% comment %}
+{% filter upper %}
+{# {% verbatim %} #}
+{% endcomment %}
+    {% spaceless %}
+
 <table>
     <tr>
         <td>
@@ -20,16 +26,24 @@
             {% endfor %}
             </select>
             <hr>
-            {% regroup bbs by rubric as reg_bbs %}
+            {# {% regroup bbs by rubric as reg_bbs %} #}
             {# {% for el_reg_bbs in reg_bbs %} #}
             {#                <h3>{{ el_reg_bbs.grouper }}</h3> #}
             {#            {% for bb in el_reg_bbs.list %} #}
             {% for bb in bbs %}
+                {# <h4>{{ forloop.revcounter0 }}</h4> #}
+                {# {% if forloop.first %}<h4>Добрый день!</h4>{% endif %} #}
+                {# {% ifchanged %} #}
+                {#     <h4>{{ bb.rubric }}</h4> #}
+                {# {% endifchanged %} #}
+                {# <h4>{% cycle 1 2 3 %}</h4> #}
                 <a href="{% url 'update_bb' bb.pk %}">{{ bb.name|upper }}</a> <br>
                 {% if bb.picture %}
                     <img src="{{ bb.picture.url }}" width="150px" height="150px"/>
                 {% endif %}
+                {% autoescape off %}
                 {{ bb.description|truncatechars:100}} <br>
+                {% endautoescape %}
                 {{ bb.cost|default:"бесплатно" }} {% if bb.cost > 0 %} {{ bb.curr }} {% endif %}  <br>
                 {{ bb.rubric }} <br>
                 {{ bb.update_timestamp|date:'d.m.Y H:i:s' }} <br>
@@ -37,10 +51,15 @@
                 {{ bb.active_flag|yesno:"Активно,Неактивно" }} <br>
                 ({{ bb.cfield }})
                 <hr>
+                {# {% if forloop.last %}<h4>До свидания!</h4>{% endif %} #}
             {% endfor %}
             {# {% endfor %} #}
         </td>
     </tr>
 </table>
+
+    {% endspaceless %}
+    {# {% endverbatim %} #}
+    {# {% endfilter %} #}
 <script src="{% static 'bb/index.js' %}"></script>
 {% endblock body_content %}
