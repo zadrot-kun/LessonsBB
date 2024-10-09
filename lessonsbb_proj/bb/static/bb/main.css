@@ -15,3 +15,7 @@ div.up_button img {
 body{
     background-color: white;
 }
+.errorlist{
+    color: #c30006;
+    font-weight: bold;
+}

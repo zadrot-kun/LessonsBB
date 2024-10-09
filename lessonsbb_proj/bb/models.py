@@ -41,14 +41,20 @@ class Bulletin(models.Model):
     description = models.TextField(verbose_name="Описание",
                                    help_text="Текст неограниченной длинны",
                                    validators=[min_10_chars_vlid])
-    cost = models.DecimalField(decimal_places=2, max_digits=11)
+    cost = models.DecimalField(
+        decimal_places=2,
+        max_digits=11,
+        verbose_name="Стоимость",
+    )
     curr = models.CharField(max_length=3,
                             verbose_name="Валюта")
-    rubric = models.ForeignKey(Rubric,
-                               on_delete=models.PROTECT,
-                               verbose_name="Рубрика",
-                               related_name='bbs',
-                               related_query_name='bbs')
+    rubric = models.ForeignKey(
+        Rubric,
+        on_delete=models.PROTECT,
+        verbose_name="Рубрика",
+        related_name='bbs',
+        related_query_name='bbs',
+    )
     create_timestamp = models.DateTimeField(auto_now_add=True,
                                             verbose_name="Метка даты/времени создания записи",
                                             blank=True)

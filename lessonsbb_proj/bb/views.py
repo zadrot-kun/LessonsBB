@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
 from bb.models import Bulletin as BulletinModel, Rubric as RubricModel
-from bb.forms import BBForm, RubricForm
+from bb.forms import BBForm, RubricForm, UpdateBulletinForm
 from django.http import JsonResponse
 from django.template.response import TemplateResponse
 from django.urls import reverse
@@ -49,8 +49,8 @@ def create_bb(request):
                                    rubric=bb_form.cleaned_data['rubric'],
                                    picture=bb_form.cleaned_data['picture'])
             new_bb.save()
-            new_bb.description += '!'
-            new_bb.save()
+            # new_bb.description += '!'
+            # new_bb.save()
             return HttpResponseRedirect(reverse('index'))
         else:
             return TemplateResponse(request,
@@ -67,6 +67,7 @@ def update_bb(request, bb_pk):
     except BulletinModel.DoesNotExist:
         return HttpResponseNotFound('Не найдено данное объявление')
     if request.method == 'GET':
+        # bb_form = UpdateBulletinForm(initial={'name': bb.name, 'description': bb.description,})
         bb_form = BBForm(instance=bb)
         return TemplateResponse(request,
                                 template_name,
@@ -74,14 +75,14 @@ def update_bb(request, bb_pk):
     elif request.method == 'POST':
         bb_form = BBForm(request.POST, request.FILES, instance=bb)
         if bb_form.is_valid():
-            # bb_form.save()
-            bb.name = request.POST['name']
-            bb.description = bb_form.cleaned_data['description']
-            bb.cost = bb_form.cleaned_data['cost']
-            bb.curr = bb_form.cleaned_data['curr']
-            bb.rubric = bb_form.cleaned_data['rubric']
-            bb.picture = bb_form.cleaned_data['picture']
-            bb.save()
+            bb_form.save()
+            # bb.name = request.POST['name']
+            # bb.description = bb_form.cleaned_data['description']
+            # bb.cost = bb_form.cleaned_data['cost']
+            # bb.curr = bb_form.cleaned_data['curr']
+            # bb.rubric = bb_form.cleaned_data['rubric']
+            # bb.picture = bb_form.cleaned_data['picture']
+            # bb.save()
             # return HttpResponseRedirect(reverse('index'))
             return redirect(reverse('index'))
         else:
