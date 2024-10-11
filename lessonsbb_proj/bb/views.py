@@ -41,14 +41,14 @@ def create_bb(request):
     elif request.method == 'POST':
         bb_form = BBForm(request.POST, request.FILES)
         if bb_form.is_valid():
-            # bb_form.save()
-            new_bb = BulletinModel(name=bb_form.cleaned_data['name'],
-                                   description=bb_form.cleaned_data['description'],
-                                   cost=bb_form.cleaned_data['cost'],
-                                   curr=bb_form.cleaned_data['curr'],
-                                   rubric=bb_form.cleaned_data['rubric'],
-                                   picture=bb_form.cleaned_data['picture'])
-            new_bb.save()
+            bb_form.save()
+            # new_bb = BulletinModel(name=bb_form.cleaned_data['name'],
+            #                        description=bb_form.cleaned_data['description'],
+            #                        cost=bb_form.cleaned_data['cost'],
+            #                        curr=bb_form.cleaned_data['curr'],
+            #                        rubric=bb_form.cleaned_data['rubric'],
+            #                        picture=bb_form.cleaned_data['picture'])
+            # new_bb.save()
             # new_bb.description += '!'
             # new_bb.save()
             return HttpResponseRedirect(reverse('index'))
