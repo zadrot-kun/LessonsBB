@@ -10,6 +10,9 @@ from django.http import HttpResponseNotFound
 from django.db import models
 from django.views.decorators.http import require_GET, require_http_methods
 from django.views.generic.base import TemplateView
+from django.forms import inlineformset_factory
+from comments.models import Comment as CommentModel
+from django.forms.widgets import TextInput
 
 
 SORTING_DICT = {
@@ -69,9 +72,23 @@ def update_bb(request, bb_pk):
     if request.method == 'GET':
         # bb_form = UpdateBulletinForm(initial={'name': bb.name, 'description': bb.description,})
         bb_form = BBForm(instance=bb)
-        return TemplateResponse(request,
-                                template_name,
-                                context={'form': bb_form})
+        class_formset = inlineformset_factory(
+            BulletinModel,
+            CommentModel,
+            fields=['comment'],
+            extra=1,
+            widgets={'comment': TextInput},
+        )
+        formset = class_formset(instance=bb)
+        return TemplateResponse(
+            request,
+            template_name,
+            context={
+                'form': bb_form,
+                'formset': formset,
+                'bb_pk': bb_pk,
+            }
+        )
     elif request.method == 'POST':
         bb_form = BBForm(request.POST, request.FILES, instance=bb)
         if bb_form.is_valid():
@@ -89,6 +106,19 @@ def update_bb(request, bb_pk):
             return TemplateResponse(request,
                                     template_name,
                                     context={'form': bb_form})
+
+@require_http_methods(['POST'])
+def update_bb_comments(request, bb_pk):
+    try:
+        bb = BulletinModel.objects.get(pk=bb_pk)
+    except BulletinModel.DoesNotExist:
+        return HttpResponseNotFound('Не найдено данное объявление')
+    if request.method == 'POST':
+        class_formset = inlineformset_factory(BulletinModel, CommentModel, fields=['comment'], extra=1)
+        formset = class_formset(request.POST, instance=bb)
+        if formset.is_valid():
+            formset.save()
+        return redirect(reverse('update_bb', kwargs={'bb_pk': bb_pk}))
 
 class CreateBBController(CreateView):
     model = BulletinModel

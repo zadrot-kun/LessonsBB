@@ -1,10 +1,22 @@
 {% extends 'bb/root.html' %}
+{% load django_bootstrap5 %}
 
 {% block body_content %}
 <form method="post"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
     {% csrf_token %}
-    {{ form.as_p }}
+    {% bootstrap_form form show_label=False %}
+    {# {{ form.as_p }} #}
     {# {{ form.name.label }}{{ form.name }} #}
-    <input type="submit" value="Добавить">
+    {% bootstrap_button button_type="submit" content="OK" %}
+    {% bootstrap_button button_type="reset" content="Отменить" %}
 </form>
+    <hr>
+    {% if formset %}
+    	<form method="post" action="{% url "update_bb_comments" bb_pk=bb_pk %}">
+            {% csrf_token %}
+            {% bootstrap_formset formset %}
+            <input type="submit" value="Добавить">
+        </form>
+    {% endif %}
+
 {% endblock body_content %}
