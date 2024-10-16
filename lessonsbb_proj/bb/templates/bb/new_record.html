@@ -4,7 +4,7 @@
 {% block body_content %}
 <form method="post"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
     {% csrf_token %}
-    {% bootstrap_form form show_label=False %}
+    {% bootstrap_form form %}
     {# {{ form.as_p }} #}
     {# {{ form.name.label }}{{ form.name }} #}
     {% bootstrap_button button_type="submit" content="OK" %}

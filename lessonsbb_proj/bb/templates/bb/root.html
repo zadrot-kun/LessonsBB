@@ -6,11 +6,10 @@
     <title>Title</title>
     <script src="{% static 'bb/jquery-3.7.1.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'bb/main.css' %}"></link>
-    {{ bootstrap_css }}
-    {{ bootstrap_javascript }}
 </head>
 <body>
-
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 <div id="up_div">
     <div class="up_button">
         <a href="{% url 'index' %}">
