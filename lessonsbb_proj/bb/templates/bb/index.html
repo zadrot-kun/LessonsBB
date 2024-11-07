@@ -8,9 +8,9 @@
 {% endcomment %}
     {% spaceless %}
 
-{# <table>  #}
-{#     <tr> #}
-{#         <td> #}
+ <table>  
+     <tr> 
+         <td> 
             <select size="10" id="filter_rubric_list">
                 {% for rubric in rubrics %}
                 <option value="{{ rubric.pk }}"{% if rubric.pk == selected_rubric %} selected{% endif %}>{{ rubric.name }}({{ rubric.count_bb }})</option>
@@ -18,8 +18,8 @@
             </select>
 {#         <hr> #}
 
-{#         </td> #}
-{#         <td> #}
+         </td> 
+         <td> 
             <select id="select_order">
             {% for sort_key, sorted_value in sorting_dict.items %}
                 <option value="{{ sort_key }}"{% if sort_key == selected_order %} selected{% endif %}>{{ sorted_value }}</option>
@@ -30,35 +30,38 @@
             {# {% for el_reg_bbs in reg_bbs %} #}
             {#                <h3>{{ el_reg_bbs.grouper }}</h3> #}
             {#            {% for bb in el_reg_bbs.list %} #}
+            <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for bb in bbs %}
-                <div class="card border-success" style="max-width: 18rem; display: flex; flex-wrap: wrap;">
-                {# <h4>{{ forloop.revcounter0 }}</h4> #}
-                {# {% if forloop.first %}<h4>Добрый день!</h4>{% endif %} #}
-                {# {% ifchanged %} #}
-                {#     <h4>{{ bb.rubric }}</h4> #}
-                {# {% endifchanged %} #}
-                {# <h4>{% cycle 1 2 3 %}</h4> #}
-                {% if bb.picture %}
-                    <img src="{{ bb.picture.url }}" class="card-img-top"/>
-                {% endif %}
-                <div class="card-body" style="width: 18rem;">
-                    <h5 class="card-title">{{ bb.name|upper }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Последнее обновление было {{ bb.update_timestamp|timesince }} назад</h6>
-                    {# <a href="{% url 'update_bb' bb.pk %}"></a> <br> #}
-                    <p class="card-text">{{ bb.description|truncatechars:100}} <br></p>
-                    {# {{ bb.rubric }} <br> #}
-                    {# {{ bb.update_timestamp|date:'d.m.Y H:i:s' }} <br> #}
-                    {# {{ bb.active_flag|yesno:"Активно,Неактивно" }} <br> #}
-                    {# ({{ bb.cfield }}) #}
-                    <a href="{% url 'update_bb' bb.pk %}" class="card-link">{{ bb.cost|default:"бесплатно" }} {% if bb.cost > 0 %} {{ bb.curr }} {% endif %}</a>
-                </div>
-                <hr>
-                {# {% if forloop.last %}<h4>До свидания!</h4>{% endif %} #}
+                <div class="col">
+                    <div class="card border-success" >
+                        {# <h4>{{ forloop.revcounter0 }}</h4> #}
+                        {# {% if forloop.first %}<h4>Добрый день!</h4>{% endif %} #}
+                        {# {% ifchanged %} #}
+                        {#     <h4>{{ bb.rubric }}</h4> #}
+                        {# {% endifchanged %} #}
+                        {# <h4>{% cycle 1 2 3 %}</h4> #}
+                        {% if bb.picture %}
+                            <img src="{{ bb.picture.url }}" class="card-img-top" style="height: 350px; width: auto;"/>
+                        {% endif %}
+                        <div class="card-body" style="width: 18rem;">
+                            <h5 class="card-title">{{ bb.name|upper }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Последнее обновление было {{ bb.update_timestamp|timesince }} назад</h6>
+                            {# <a href="{% url 'update_bb' bb.pk %}"></a> <br> #}
+                            <p class="card-text">{{ bb.description|truncatechars:100}} <br></p>
+                            {# {{ bb.rubric }} <br> #}
+                            {# {{ bb.update_timestamp|date:'d.m.Y H:i:s' }} <br> #}
+                            {# {{ bb.active_flag|yesno:"Активно,Неактивно" }} <br> #}
+                            {# ({{ bb.cfield }}) #}
+                            <a href="{% url 'update_bb' bb.pk %}" class="card-link">{{ bb.cost|default:"бесплатно" }} {% if bb.cost > 0 %} {{ bb.curr }} {% endif %}</a>
+                        </div>
+                        {# {% if forloop.last %}<h4>До свидания!</h4>{% endif %} #}
+                    </div>
                 </div>
             {% endfor %}
+            </div>
             {# {% endfor %} #}
-{#         </td> #}
-{#     </tr> #}
+         </td> 
+     </tr> 
 </table>
 
     {% endspaceless %}
