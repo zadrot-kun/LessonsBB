@@ -55,15 +55,15 @@ class Bulletin(models.Model):
         related_name='bbs',
         related_query_name='bbs',
     )
+
     create_timestamp = models.DateTimeField(auto_now_add=True,
                                             verbose_name="Метка даты/времени создания записи",
                                             blank=True)
+
     update_timestamp = models.DateTimeField(auto_now=True,
                                             verbose_name="Метка даты/времени изменения записи",
                                             blank=True)
-    picture = models.ImageField(verbose_name="Изображение",
-                                upload_to="img",
-                                blank=True)
+
     active_flag = models.BooleanField(
         verbose_name="Флаг активности объявления",
         default=True,
@@ -81,3 +81,20 @@ class Bulletin(models.Model):
             ('alcohol', 'Права на покупку алкоголя'),
         )
         default_permissions = ('add', 'view', 'change', 'delete', 'alcohol')
+
+
+class Picture(models.Model):
+
+    bb = models.ForeignKey(
+        Bulletin,
+        on_delete=models.CASCADE,
+    )
+
+    picture = models.ImageField(
+        verbose_name="Изображение",
+        upload_to="img",
+    )
+
+    class Meta:
+        verbose_name = 'Изображение'
+        verbose_name_plural = 'Изображения'

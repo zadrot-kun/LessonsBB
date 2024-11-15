@@ -1,6 +1,7 @@
 import django.forms as forms
-from bb.models import Bulletin as BulletinModel, Rubric as RubricModel
+from bb.models import Bulletin as BulletinModel, Rubric as RubricModel, Picture as PictureModel
 from django.core.exceptions import ValidationError
+from django.forms import inlineformset_factory
 
 class UpdateBulletinForm(forms.Form):
     name = forms.CharField(
@@ -31,6 +32,17 @@ class BBForm(forms.ModelForm):
         fields = '__all__'
         # exclude = ('rubric', 'picture')
 
+class PictureForm(forms.ModelForm):
+
+    class Meta:
+        model = PictureModel
+        fields = '__all__'
+
+BBFormSet = inlineformset_factory(
+    BulletinModel,
+    PictureModel,
+    fields = '__all__'
+)
 
 class RubricForm(forms.ModelForm):
     class Meta:

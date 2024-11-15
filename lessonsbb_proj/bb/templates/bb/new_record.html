@@ -11,12 +11,21 @@
     {% bootstrap_button button_type="reset" content="Отменить" %}
 </form>
     <hr>
-    {% if formset %}
-    	<form method="post" action="{% url "update_bb_comments" bb_pk=bb_pk %}">
+    {% if images_formset %}
+    	<form method="post" action="{% url "update_bb_images" bb_pk=bb_pk %}">
             {% csrf_token %}
-            {% bootstrap_formset formset %}
-            <input type="submit" value="Добавить">
+            {% bootstrap_formset images_formset %}
+            {% bootstrap_button button_type="submit" content="Сохранить" %}
         </form>
     {% endif %}
+    <hr>
+    {% if comment_formset %}
+    	<form method="post" action="{% url "update_bb_comments" bb_pk=bb_pk %}">
+            {% csrf_token %}
+            {% bootstrap_formset comment_formset %}
+            {% bootstrap_button button_type="submit" content="Сохранить" %}
+        </form>
+    {% endif %}
+
 
 {% endblock body_content %}

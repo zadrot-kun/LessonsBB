@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
 from bb.models import Bulletin as BulletinModel, Rubric as RubricModel
-from bb.forms import BBForm, RubricForm, UpdateBulletinForm
+from bb.forms import BBForm, RubricForm, UpdateBulletinForm, BBFormSet
 from django.http import JsonResponse
 from django.template.response import TemplateResponse
 from django.urls import reverse
@@ -72,6 +72,7 @@ def update_bb(request, bb_pk):
     if request.method == 'GET':
         # bb_form = UpdateBulletinForm(initial={'name': bb.name, 'description': bb.description,})
         bb_form = BBForm(instance=bb)
+        bbimages_formset = BBFormSet(instance=bb)
         class_formset = inlineformset_factory(
             BulletinModel,
             CommentModel,
@@ -85,8 +86,9 @@ def update_bb(request, bb_pk):
             template_name,
             context={
                 'form': bb_form,
-                'formset': formset,
+                'comment_formset': formset,
                 'bb_pk': bb_pk,
+                'images_formset': bbimages_formset,
             }
         )
     elif request.method == 'POST':
@@ -115,10 +117,22 @@ def update_bb_comments(request, bb_pk):
         return HttpResponseNotFound('Не найдено данное объявление')
     if request.method == 'POST':
         class_formset = inlineformset_factory(BulletinModel, CommentModel, fields=['comment'], extra=1)
-        formset = class_formset(request.POST, instance=bb)
-        if formset.is_valid():
-            formset.save()
+        bbimages_formset = BBFormSet(request.POST, instance=bb)
+        if bbimages_formset.is_valid():
+            bbimages_formset.save()
         return redirect(reverse('update_bb', kwargs={'bb_pk': bb_pk}))
+
+@require_http_methods(['POST'])
+def update_bb_images(request, bb_pk):
+    try:
+        bb = BulletinModel.objects.get(pk=bb_pk)
+    except BulletinModel.DoesNotExist:
+        return HttpResponseNotFound('Не найдено данное объявление')
+    class_formset = inlineformset_factory(BulletinModel, CommentModel, fields=['comment'], extra=1)
+    formset = class_formset(request.POST, request.FILES, instance=bb)
+    if formset.is_valid():
+        formset.save()
+    return redirect(reverse('update_bb', kwargs={'bb_pk': bb_pk}))
 
 class CreateBBController(CreateView):
     model = BulletinModel
