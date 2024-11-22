@@ -117,9 +117,9 @@ def update_bb_comments(request, bb_pk):
         return HttpResponseNotFound('Не найдено данное объявление')
     if request.method == 'POST':
         class_formset = inlineformset_factory(BulletinModel, CommentModel, fields=['comment'], extra=1)
-        bbimages_formset = BBFormSet(request.POST, instance=bb)
-        if bbimages_formset.is_valid():
-            bbimages_formset.save()
+        formset = class_formset(request.POST, instance=bb)
+        if formset.is_valid():
+            formset.save()
         return redirect(reverse('update_bb', kwargs={'bb_pk': bb_pk}))
 
 @require_http_methods(['POST'])
@@ -128,10 +128,9 @@ def update_bb_images(request, bb_pk):
         bb = BulletinModel.objects.get(pk=bb_pk)
     except BulletinModel.DoesNotExist:
         return HttpResponseNotFound('Не найдено данное объявление')
-    class_formset = inlineformset_factory(BulletinModel, CommentModel, fields=['comment'], extra=1)
-    formset = class_formset(request.POST, request.FILES, instance=bb)
-    if formset.is_valid():
-        formset.save()
+    bbimages_formset = BBFormSet(request.POST, request.FILES, instance=bb)
+    if bbimages_formset.is_valid():
+        bbimages_formset.save()
     return redirect(reverse('update_bb', kwargs={'bb_pk': bb_pk}))
 
 class CreateBBController(CreateView):

@@ -35,8 +35,30 @@
             {#     <h4>{{ bb.rubric }}</h4> #}
             {# {% endifchanged %} #}
             {# <h4>{% cycle 1 2 3 %}</h4> #}
-            {% if bb.picture %}
-                <img src="{{ bb.picture.url }}" class="card-img-top" style="height: 350px; width: auto;"/>
+            {% if bb.picture_set.all %}
+                <div id="carouselExample" class="carousel slide">
+                  <div class="carousel-indicators">
+                      {% for picture in bb.picture_set.all %}
+                          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}"{% if forloop.first %} class="active" aria-current="true"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
+                      {% endfor %}
+                  </div>
+                  <div class="carousel-inner">
+                      {% for picture in bb.picture_set.all %}
+                          <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                            <img src="{{ picture.picture.url }}" class="d-block w-100" />
+                          </div>
+                      {% endfor %}
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+                {# <img src="{{ bb.picture.url }}" class="card-img-top" style="height: 350px; width: auto;"/> #}
             {% endif %}
             <div class="card-body" style="width: 18rem;">
                 <h5 class="card-title">{{ bb.name|upper }}</h5>
@@ -55,7 +77,9 @@
 {% endfor %}
 </div>
 {# {% endfor %} #}
-
+<a href="{% url 'create_bb' %}">
+<div style="color: white; font-size: 60px; line-height: 40px; vertical-align: middle; text-align: center; position: fixed; bottom: 15px; right: 15px; height: 50px; width: 50px; background-color: limegreen; border-radius: 50%;">+</div>
+</a>
 {% endspaceless %}
 {# {% endverbatim %} #}
 {# {% endfilter %} #}
