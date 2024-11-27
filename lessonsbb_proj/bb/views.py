@@ -13,6 +13,7 @@ from django.views.generic.base import TemplateView
 from django.forms import inlineformset_factory
 from comments.models import Comment as CommentModel
 from django.forms.widgets import TextInput
+from django.contrib.auth.decorators import login_required
 
 
 SORTING_DICT = {
@@ -33,7 +34,7 @@ class CreateRubricController(CreateView):
     def get_success_url(self):
         return reverse('index')
 
-
+@login_required()
 def create_bb(request):
     template_name = "bb/new_record.html"
     if request.method == 'GET':
@@ -250,3 +251,5 @@ def index_by_rubric(request, rubric):
                             'bb/index.html',
                             context={"rubrics": rubrics,
                                      "bbs": bbs})
+
+
