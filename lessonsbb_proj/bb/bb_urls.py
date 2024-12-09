@@ -6,7 +6,9 @@ from bb.views import (CreateRubricController,
                       create_bb,
                       update_bb,
                       update_bb_comments,
-                      update_bb_images)
+                      update_bb_images,
+                      BBs_REST,
+                      BB_REST)
 
 urlpatterns = [
     path('create_rubric/', CreateRubricController.as_view(), name="create_rubric"),
@@ -17,4 +19,6 @@ urlpatterns = [
     path('update_bb/<int:bb_pk>/images', update_bb_images, name="update_bb_images", ),
     path('test_json/', test_json_controller),
     path('rubrics/<int:rubric>/', index_by_rubric, name="bb_by_rubric"),
+    path('bbs_rest/', BBs_REST.as_view()),
+    path('bbs_rest/<int:bb_id>/', BB_REST.as_view()),
 ]

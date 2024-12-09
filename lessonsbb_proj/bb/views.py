@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, HttpResponseForbidden
 from django.db import models
 from django.views.decorators.http import require_GET, require_http_methods
 from django.views.generic.base import TemplateView
@@ -14,6 +14,11 @@ from django.forms import inlineformset_factory
 from comments.models import Comment as CommentModel
 from django.forms.widgets import TextInput
 from django.contrib.auth.decorators import login_required
+from rest_framework.views import APIView
+from drf_yasg.utils import swagger_auto_schema
+from bb.serialyzers import BulletinSerializer, BulletinCommentsSerializer
+from rest_framework.response import Response
+from rest_framework import status
 
 
 SORTING_DICT = {
@@ -45,7 +50,9 @@ def create_bb(request):
     elif request.method == 'POST':
         bb_form = BBForm(request.POST, request.FILES)
         if bb_form.is_valid():
-            bb_form.save()
+            new_bb = bb_form.save(commit=False)
+            new_bb.author = request.user
+            new_bb.save()
             # new_bb = BulletinModel(name=bb_form.cleaned_data['name'],
             #                        description=bb_form.cleaned_data['description'],
             #                        cost=bb_form.cleaned_data['cost'],
@@ -70,6 +77,8 @@ def update_bb(request, bb_pk):
         bb = BulletinModel.objects.get(pk=bb_pk)
     except BulletinModel.DoesNotExist:
         return HttpResponseNotFound('Не найдено данное объявление')
+    if bb.author != request.user:
+        return HttpResponseForbidden('Редактировать объявление может только его автор')
     if request.method == 'GET':
         # bb_form = UpdateBulletinForm(initial={'name': bb.name, 'description': bb.description,})
         bb_form = BBForm(instance=bb)
@@ -253,3 +262,62 @@ def index_by_rubric(request, rubric):
                                      "bbs": bbs})
 
 
+class BBs_REST(APIView):
+
+    @swagger_auto_schema(
+        responses={200: BulletinSerializer(many=True)}
+    )
+    def get(self, request):
+        """Просмотр множества объявлений"""
+        serializer = BulletinSerializer(BulletinModel.objects.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=BulletinSerializer,
+        responses={201: BulletinSerializer}
+    )
+    def post(self, request):
+        """Создание объявления"""
+        serializer = BulletinSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BB_REST(APIView):
+
+    @swagger_auto_schema(
+        request_body=BulletinSerializer,
+        responses={201: BulletinSerializer}
+    )
+    def put(self, request, bb_id):
+        """Изменение объявления"""
+        try:
+            bb = BulletinModel.objects.get(pk=bb_id)
+        except BulletinModel.DoesNotExist:
+            return Response('Объявление с данным идентификатором не найдено', status=status.HTTP_404_NOT_FOUND)
+        serializer = BulletinSerializer(instance=bb, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(
+        responses={200: BulletinCommentsSerializer}
+    )
+    def get(self, request, bb_id):
+        try:
+            bb = BulletinModel.objects.get(pk=bb_id)
+        except BulletinModel.DoesNotExist:
+            return Response('Объявление с данным идентификатором не найдено', status=status.HTTP_404_NOT_FOUND)
+        serializer = BulletinCommentsSerializer(instance=bb)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, bb_id):
+        try:
+            bb = BulletinModel.objects.get(pk=bb_id)
+        except BulletinModel.DoesNotExist:
+            return Response('Объявление с данным идентификатором не найдено', status=status.HTTP_404_NOT_FOUND)
+        bb.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

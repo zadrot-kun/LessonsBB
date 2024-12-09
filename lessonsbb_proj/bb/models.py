@@ -1,5 +1,7 @@
 from django.db import models
 from django.core import validators
+from django.conf import settings
+
 
 min_10_chars_vlid = validators.MinLengthValidator(
     10,
@@ -35,19 +37,25 @@ class Rubric(models.Model):
 
 class Bulletin(models.Model):
     """Модель объявления"""
-    name = models.CharField(max_length=100,
-                            verbose_name="Название",
-                            validators=[min_10_chars_vlid])
-    description = models.TextField(verbose_name="Описание",
-                                   help_text="Текст неограниченной длинны",
-                                   validators=[min_10_chars_vlid])
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Название",
+        validators=[min_10_chars_vlid]
+    )
+    description = models.TextField(
+        verbose_name="Описание",
+        help_text="Текст неограниченной длинны",
+        validators=[min_10_chars_vlid]
+    )
     cost = models.DecimalField(
         decimal_places=2,
         max_digits=11,
         verbose_name="Стоимость",
     )
-    curr = models.CharField(max_length=3,
-                            verbose_name="Валюта")
+    curr = models.CharField(
+        max_length=3,
+        verbose_name="Валюта"
+    )
     rubric = models.ForeignKey(
         Rubric,
         on_delete=models.PROTECT,
@@ -56,17 +64,29 @@ class Bulletin(models.Model):
         related_query_name='bbs',
     )
 
-    create_timestamp = models.DateTimeField(auto_now_add=True,
-                                            verbose_name="Метка даты/времени создания записи",
-                                            blank=True)
+    create_timestamp = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Метка даты/времени создания записи",
+        blank=True
+    )
 
-    update_timestamp = models.DateTimeField(auto_now=True,
-                                            verbose_name="Метка даты/времени изменения записи",
-                                            blank=True)
+    update_timestamp = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Метка даты/времени изменения записи",
+        blank=True
+    )
 
     active_flag = models.BooleanField(
         verbose_name="Флаг активности объявления",
         default=True,
+    )
+
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        verbose_name="Пользователь",
+        editable=False,
+        null=True,
     )
 
     def __str__(self):
