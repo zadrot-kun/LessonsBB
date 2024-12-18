@@ -1,6 +1,20 @@
 version: "3"
 
 services:
+  bb_app_server:
+    build:
+      context: .
+      dockerfile: app.Dockerfile
+    container_name: bb_app_server
+    restart: unless-stopped
+    volumes:
+      - ../media:/lessonsbb_proj/media
+      - ../static:/lessonsbb_proj/static
+    networks:
+      - bb_network
+    depends_on:
+      - bb_db_server
+
   bb_db_server:
     image: postgres
     container_name: bb_db_server
@@ -14,6 +28,22 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
+
+  bb_nginx_server:
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    container_name: bb_nginx_server
+    restart: unless-stopped
+    volumes:
+      - ../media:/usr/share/nginx/html/media
+      - ../static:/usr/share/nginx/html/static
+    ports:
+      - "5009:5005"
+    depends_on:
+      - bb_app_server
+    networks:
+      - bb_network
 
 networks:
   bb_network:
